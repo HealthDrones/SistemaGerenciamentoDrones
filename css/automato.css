@@ -1,0 +1,23 @@
+.morta{
+  width: 10px;
+  height: 10px;
+  background-color: #CDCDCD;
+  opacity: 0.3;
+}
+table {
+  background-image: url("../images/background1.png");
+}
+.over {
+		background: #000000;
+    opacity: 0.5;
+}
+
+.ativa{
+  background: #0698FF;
+  opacity: 0.5;
+}
+
+.ocupada{
+  background: #ef1616;
+  opacity: 0.5;
+}

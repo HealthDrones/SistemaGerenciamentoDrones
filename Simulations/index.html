@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Simulação de Rotas por Autômatos Celulares</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="../css/portfolio-item.css" rel="stylesheet">
+
+		<link rel="stylesheet" href="../ss/automato.css" type="text/css" media="screen" charset="utf-8">
+		<script src="../js/automato.js" type="text/javascript"></script>
+</head>
+
+<body>
+    <!-- Page Content -->
+    <div class="container">
+        <!-- Portfolio Item Heading -->
+        
+        <!-- /.row -->
+        <!-- Portfolio Item Row -->
+        <div class="row">
+					<div class="col-md-8">
+						<div class="panel panel-info">
+							<div class="panel-heading">Simulação da possível localização</div>
+								<div class="panel-body">
+									<canvas id="canvas" width="650" height="600" style="border:1px solid #d3d3d3;">
+									<!--<div class="col-md-9" id="grid"></div>-->
+								</div>
+						</div>
+					</div>
+            
+            <div class="col-md-4">
+              <div class="panel panel-info">
+                <div class="panel-heading">Passeio Aleatório - Ações</div>
+                <div class="panel-body">
+                    <button type="button" class="btn btn-info" onclick="start();" ><span class="glyphicon glyphicon-play" aria-hidden="true"></span></button>
+                    <button type="button" class="btn btn-danger" onclick="stopAnimation();" ><span class="glyphicon glyphicon-stop" aria-hidden="true"></span></button>
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target=".bs-example-modal-lg"><span class="glyphicon glyphicon-wrench" aria-hidden="true"></span></button>
+                    <button type="button" class="btn btn-success" onclick="resetCanvas();" ><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span></button>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-4">
+							<div class="panel panel-info">
+								<div class="panel-heading">Informações</div>
+								<div class="panel-body">
+                  <div id="console">Aguardando início da Simulação...</div>
+								</div>
+							</div>
+            </div>
+						<!-- Panel de Baixo das métricas -->
+
+            <div class="col-md-4">
+              <div class="panel panel-info">
+                <div class="panel-heading">Trajetória do Drone</div>
+                <div class="panel-body">
+                  <p>
+                    <iframe src="Simulacao3D.html" id="trajeto" width="325" height="300" style="border:1px solid #d3d3d3;" ></iframe>
+                  </p>
+                </div>
+              </div>
+            </div>
+        </div>
+        <!-- /.row -->
+      <!-- Related Projects Row -->
+        <div class="row">
+
+            <div class="col-lg-12">
+                <h3 class="page-header">Código Gerado</h3>
+            </div>
+
+            <div class="col-md-12">
+              <pre class="col-md-9">
+                <code id="codeGerado">
+                  <object data="../codeGerado/teste.txt" type="text/plain" class="col-md-12" height="300">
+                    sorry, your browser is not helping, try <a href="az.txt">az.txt</a>
+                  </object>
+                </code>
+              </pre>
+            </div>
+
+
+
+        </div>
+        <!-- /.row -->
+
+        <hr>
+
+        <!-- Footer -->
+        <footer>
+            <div class="row">
+                <div class="col-lg-12">
+                    <p>Copyright &copy; HealthDrones 2016/2017</p>
+                </div>
+            </div>
+            <!-- /.row -->
+        </footer>
+
+    </div>
+    <!-- /.container -->
+<!-- Divs para modal -->
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="ModalConfigurations">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+			<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="gridSystemModalLabel">Configurações da Simulação</h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-md-10">
+            <form class="form-horizontal">
+              <div class="form-group">
+                <label for="inputTime3" class="col-sm-5 control-label">Tempo de iteração (milissegundos)</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="inputTime3" placeholder="Tempo de iteração" value="100">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputSteps3" class="col-sm-5 control-label">Quantidade de passos (cada passo corresponde a 1s de voo)</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="inputSteps3" placeholder="Quantidade de Passos" value="360">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputR" class="col-sm-5 control-label">Saturação de Vermelho (0 |--| 255)</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="inputR" placeholder="Quantidade de Passos" value="255">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputG" class="col-sm-5 control-label">Saturação de Verde (0 |--| 255)</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="inputG" placeholder="Quantidade de Passos" value="0">
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="inputB" class="col-sm-5 control-label">Saturação de Azul (0 |--| 255)</label>
+                <div class="col-sm-5">
+                  <input type="text" class="form-control" id="inputB" placeholder="Quantidade de Passos" value="0">
+                </div>
+              </div>
+            </form>
+
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+        <button type="button" class="btn btn-primary">Salvar Dados</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- jQuery -->
+    <script src="../js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="../js/bootstrap.min.js"></script>
+
+		<script type="text/javascript">
+		var width = 650;
+		var height = 600;
+
+		var x = -(width - height)/2;
+		var y = 0;
+    var iniX=x,iniY=y;
+		var dx = 10;
+		var dy = 0;
+		var x_limit = (width - height)/2;
+		var y_limit = 0;
+		var counter = 1;
+    var passo = 0;
+    var rota = [];
+    var controleAnimation;
+    var tempoDeVoo = 0;
+    
+    var limitX = width/2 - 10;
+    var limitY = height/2 - 10;
+
+		var canvas = document.getElementById("canvas");
+		var ctx = canvas.getContext('2d');
+
+    // var trajetoria = document.getElementById("trajeto");
+    // var ctx2 = trajetoria.getContext('2d');
+
+		var img = new Image();
+      //indico a URL da imagem
+      img.src = '../images/background.png';
+      //defino o evento onload do objeto imagen
+      img.onload = function(){
+         //incluo a imagen no canvas
+          ctx.drawImage(img, 0, 0);
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+          ctx.fillRect(0,0,width,height);
+
+          //limites da imagem para simulação... ao chegar no limite o algoritmo sorteia outro número
+          ctx.fillStyle = 'rgba(100, 100, 100, 1)';
+          for(var i = 1; i<(width/10)-1;i++){
+              ctx.fillRect(i*10, 10,10,10);
+          }
+          for(var i = 1; i<(width/10)-1;i++){
+              // ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+              ctx.fillRect(i*10, height-20,10,10);
+          }
+
+          for(var i = 1; i<(height/10)-1;i++){
+              // ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+              ctx.fillRect(10, i*10,10,10);
+          }
+          for(var i = 1; i<(height/10)-1;i++){
+              // ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+              ctx.fillRect(width-20, i*10,10,10);
+          }
+
+          //Desenho da grade
+          for (var x = 0; x < width-10; x += 10) {
+              ctx.moveTo(0.5 + x + dx, dx);
+              ctx.lineTo(0.5 + x + dx, height-20 + dx);
+          }
+          for (var x = 0; x < height-10; x += 10) {
+              ctx.moveTo(dx, 0.5 + x + dx);
+              ctx.lineTo(width - dx, 0.5 + x + dx);
+          }
+
+          ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
+          ctx.stroke();
+
+          
+
+      }
+
+			function start(){
+        // PasseioAleatorio();
+				controleAnimation = setInterval("PasseioAleatorio("+document.getElementById("inputSteps3").value+")", document.getElementById("inputTime3").value);
+			}
+
+      function stopAnimation(){
+        clearInterval(controleAnimation);
+        x = -(width - height)/2;
+        y = 0;
+        dx = 10;
+        dy = 0;
+        counter = 1;
+        passo = 0;
+        rota = [];
+      }
+
+      function resetCanvas(){
+        for(var i = 0; i<width;i++){
+          for(var j=0; j<height;j++){
+            // ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+            ctx.clearRect(i*10, j*10,10,10);
+          }
+        }
+        img.src = '../images/background.png';
+        img.onload = function(){
+           //incluo a imagen no canvas
+           ctx.drawImage(img, 0, 0);
+           ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+           ctx.fillRect(0, 0,width,height);
+
+           //limites da imagem para simulação... ao chegar no limite o algoritmo sorteia outro número
+            ctx.fillStyle = 'rgba(100, 100, 100, 1)';
+            for(var i = 1; i<(width/10)-1;i++){
+                ctx.fillRect(i*10, 10,10,10);
+            }
+            for(var i = 1; i<(width/10)-1;i++){
+                // ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+                ctx.fillRect(i*10, height-20,10,10);
+            }
+
+            for(var i = 1; i<(height/10)-1;i++){
+                // ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+                ctx.fillRect(10, i*10,10,10);
+            }
+            for(var i = 1; i<(height/10)-1;i++){
+                // ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+                ctx.fillRect(width-20, i*10,10,10);
+            }
+            //desenha as linhas da grade para o autômato
+            for (var x = 0; x < width-10; x += 10) {
+                ctx.moveTo(0.5 + x + dx, dx);
+                ctx.lineTo(0.5 + x + dx, height-20 + dx);
+            }
+            for (var x = 0; x < height-10; x += 10) {
+                ctx.moveTo(dx, 0.5 + x + dx);
+                ctx.lineTo(width - dx, 0.5 + x + dx);
+            }
+
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)';
+            ctx.stroke();
+        }
+        
+        // alert("Executou clear!");
+        clearInterval(controleAnimation);
+        x = -(width - height)/2;
+        y = 0;
+        dx = 10;
+        dy = 0;
+        counter = 1;
+        passo = 0;
+        rota = [];
+      }
+		// //
+		// 	montaGrid(57,43);
+		</script>
+</body>
+
+</html>
